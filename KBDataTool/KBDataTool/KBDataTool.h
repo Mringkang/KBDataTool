@@ -18,7 +18,7 @@
 + (BOOL)isKey:(NSString *)key;
 
 
-+ (NSString *)queryWithKey:(NSString *)key;
++ (NSArray *)queryWithKey:(NSString *)name andWithAge:(NSString *)age;
 
 
 @end

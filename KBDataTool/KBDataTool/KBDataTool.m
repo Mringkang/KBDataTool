@@ -16,7 +16,7 @@ static FMDatabase *_db;
 + (void)initialize
 {
     //1. 获取路径
-    NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"demo.db"];
+    NSString *filePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"demwo.db"];
     
     NSLog(@"filePath : %@", filePath);
     
@@ -30,26 +30,28 @@ static FMDatabase *_db;
     
     //4. 创建表
     //id: 主键 从1开始自增, 不需要设置
-    [_db executeUpdate:@"CREATE TABLE IF NOT EXISTS t_table(id integer PRIMARY KEY, key text NOT NULL, value text NOT NULL);"];
+    [_db executeUpdate:@"CREATE TABLE IF NOT EXISTS t_table(id integer PRIMARY KEY, name text NOT NULL, age text NOT NULL);"];
 }
 
 
 + (void)addKey:(NSString *)key andValue:(NSString *)value{
 
-    [_db executeUpdateWithFormat:@"INSERT INTO t_table(key,value) VALUES(%@,%@);",key,value];
+    
+    [_db executeUpdate:@"INSERT INTO t_table (name, age) VALUES (?, ?);", key, value];
 
 }
 
 + (void)deleteWithKey:(NSString *)key{
 
-    [_db executeUpdateWithFormat:@"DELETE FROM t_table WHERE key=%@", key];
+    [_db executeUpdateWithFormat:@"DELETE FROM t_table WHERE name=%@", key];  // format就用%@
     
 }
+
 
 + (BOOL)isKey:(NSString *)key{
 
     //1. 返回结果集
-    FMResultSet *set = [_db executeQueryWithFormat:@"SELECT count(*) AS count FROM t_table WHERE key=%@", key];
+    FMResultSet *set = [_db executeQueryWithFormat:@"SELECT count(*) AS count FROM t_table WHERE name=%@", key];
     
     //2. 调用next --> 要想查询结果, 必须调用next方法 --> 才会去数据库查找值
     [set next];
@@ -63,23 +65,42 @@ static FMDatabase *_db;
 
 }
 
-+ (NSString *)queryWithKey:(NSString *)key{
++ (NSArray *)queryWithKey:(NSString *)name andWithAge:(NSString *)age{
 
+    
+    NSMutableArray *mua = [NSMutableArray arrayWithCapacity:8];
+    
+    
     FMResultSet *rs = [_db executeQuery:@"SELECT  *FROM t_table"];
     
 
     while ([rs next]) {
         
-        NSString *name = [rs stringForColumn:@"key"];
+        NSString *aname = [rs stringForColumn:name];  //字段
+        
+        NSString *aage = [rs stringForColumn:age];
         
         
-        return name;
+        
+        [mua addObject:aname];
+        [mua addObject:aage];
+        
+        return mua.copy;
         
     }
+    
     
     return nil;
 
 
 }
+
+
+/*
+ int ID = [resultSet intForColumn:@"id"];
+ NSString *name = [resultSet stringForColumn:@"name"];
+ int age = [resultSet intForColumn:@"age"];
+ 
+ */
 
 @end

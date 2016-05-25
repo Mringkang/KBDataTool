@@ -55,7 +55,7 @@
 - (void)inset{
     
     NSLog(@"插入");
-    [KBDataTool addKey:@"jack" andValue:@"12"];
+    [KBDataTool addKey:@"jack" andValue:[NSString stringWithFormat:@"%d",arc4random_uniform(100)]];
     
     [KBDataTool addKey:@"rose" andValue:@"21"];
     
@@ -66,11 +66,11 @@
     
 }
 
+
 - (void)query{
     
-    NSLog(@"查询");
     
-   NSString *name = [KBDataTool queryWithKey:@"rose"];
+    NSArray *name = [KBDataTool queryWithKey:@"name" andWithAge:@"age"];
     
     NSLog(@"%@",name);
     
