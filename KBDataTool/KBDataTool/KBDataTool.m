@@ -95,6 +95,12 @@ static FMDatabase *_db;
 
 }
 
++ (void)updateName:(NSString *)name AndWithAge:(NSString*)age{
+    
+    // 更新数据
+    [_db executeUpdateWithFormat:@"UPDATE t_list_model SET name =%@ WHERE age =%@", name, age];
+}
+
 
 /*
  int ID = [resultSet intForColumn:@"id"];
